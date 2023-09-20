@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include<stdlib.h>
+
+#define MAXSIZE 3000
+
+typedef struct
+{
+    int* data;
+    int maxsize;
+    int length;
+}Sqlist;
+
+void InitList(Sqlist* l, int max)
+{
+    l->maxsize = max;
+    for (int i = 0; i < l->maxsize; i++)
+    {
+        l->data[i] = i + 1;
+    }
+    l->length = l->maxsize;
+}
+
+void list_destroy(Sqlist* l, int num)
+{
+    for (int i = num; i < l->length; i++)
+    {
+        l->data[i-1] = l->data[i];
+    }
+    l->length--;
+}
+
+int main(void)
+{
+    int n, p;
+    scanf("%d", &n);
+    scanf("%d", &p);
+    Sqlist people;
+    people.data = (Sqlist* )malloc (MAXSIZE * sizeof(int));
+    InitList(&people, n);
+    //要考虑到n小于p的情况  可以对p进行取模运算；
+    int add = p;
+    while (people.length > 0)
+    {
+        if (people.length < p)
+        {
+            p = p % people.length ;
+            if (p == 0)
+            {
+                p = people.length;
+            }
+        }
+        printf("%d ", people.data[p-1]);
+        int ans = people.data[p-1];
+        list_destroy(&people, p );
+        p = p + add - 1 ;
+    }
+    free(people.data);
+    return 0;
+
+}
